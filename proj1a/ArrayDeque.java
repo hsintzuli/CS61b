@@ -1,4 +1,4 @@
-public class ArrayDeque<T> implements Deque<T>{
+public class ArrayDeque<T> {
     private T[] items;
     private int length;
     private int size;
@@ -76,26 +76,35 @@ public class ArrayDeque<T> implements Deque<T>{
     }
 
     public T removeFirst(){
-        nextFirst = circulateIndex(nextFirst, 1);
-        T firstItem = items[nextFirst] ;
-        items[nextFirst] = null;
-        size = size - 1;
-        if(checkLoitering()){
-            shrinkLength();
+        if( !isEmpty()) {
+            nextFirst = circulateIndex(nextFirst, 1);
+            T firstItem = items[nextFirst];
+            items[nextFirst] = null;
+            size = size - 1;
+            if (checkLoitering()) {
+                shrinkLength();
+            }
+            return firstItem;
+        }else{
+            return null;
         }
-        return firstItem;
+
     }
 
     public T removeLast(){
-        nextLast = circulateIndex(nextLast, -1);
-        T lastItem = items[nextLast] ;
-        items[nextLast] = null;
-        size = size - 1;
-        if(checkLoitering()){
-            shrinkLength();
-        }
+        if( !isEmpty()) {
+            nextLast = circulateIndex(nextLast, -1);
+            T lastItem = items[nextLast];
+            items[nextLast] = null;
+            size = size - 1;
+            if (checkLoitering()) {
+                shrinkLength();
+            }
 
-        return lastItem;
+            return lastItem;
+        }else{
+            return null;
+        }
     }
 
     public T get(int index){

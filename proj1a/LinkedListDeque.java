@@ -1,4 +1,4 @@
-public class LinkedListDeque<T> implements Deque<T>{
+public class LinkedListDeque<T> {
     private class Node{
         public Node prev;
         public T item;
@@ -54,19 +54,28 @@ public class LinkedListDeque<T> implements Deque<T>{
     }
 
     public T removeFirst(){
-        Node firstItem = sentinel.next;
-        sentinel.next = firstItem.next;
-        sentinel.next.prev = sentinel;
-        size --;
-        return firstItem.item;
+        if( !isEmpty()) {
+            Node firstItem = sentinel.next;
+            sentinel.next = firstItem.next;
+            sentinel.next.prev = sentinel;
+            size--;
+            return firstItem.item;
+        } else{
+            return null;
+        }
     }
 
     public T removeLast(){
-        Node lastItem = sentinel.prev;
-        sentinel.prev = lastItem.prev;
-        sentinel.prev.next = sentinel;
-        size --;
-        return lastItem.item;
+        if( !isEmpty()) {
+            Node lastItem = sentinel.prev;
+            sentinel.prev = lastItem.prev;
+            sentinel.prev.next = sentinel;
+            size--;
+            return lastItem.item;
+        }
+        else{
+            return null;
+        }
     }
     public T get(int index){
         Node pointer = sentinel.next;
@@ -77,5 +86,21 @@ public class LinkedListDeque<T> implements Deque<T>{
             pointer = pointer.next;
         }
         return pointer.item;
+    }
+
+    public T getRecursive(int index){
+        if(index >= size){
+            return null;
+        }else{
+            return getRecursive(index, sentinel.next);
+        }
+    }
+
+    private T getRecursive(int index, Node node){
+        if(index == 0){
+            return node.item;
+        }else{
+            return getRecursive(index-1, node.next);
+        }
     }
 }
