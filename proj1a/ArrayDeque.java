@@ -9,7 +9,7 @@ public class ArrayDeque<T> {
     private int basisCapacity = 16;
 
     /** Creates an empty array deque. */
-    public ArrayDeque(){
+    public ArrayDeque() {
 
         this(8);
     }
@@ -43,7 +43,7 @@ public class ArrayDeque<T> {
 
     public void addFirst(T item) {
         if (size == items.length) {
-            expandLength( 2);
+            expandLength(2);
         }
         items[nextFirst] = item;
         nextFirst = circulateIndex(nextFirst, -1);
@@ -60,7 +60,7 @@ public class ArrayDeque<T> {
     }
 
     public boolean isEmpty() {
-        return(size == 0);
+        return (size == 0);
     }
 
     public int size() {
@@ -89,7 +89,7 @@ public class ArrayDeque<T> {
         }
     }
 
-    public T removeLast(){
+    public T removeLast() {
         if (!isEmpty()) {
             nextLast = circulateIndex(nextLast, -1);
             T lastItem = items[nextLast];
@@ -130,10 +130,6 @@ public class ArrayDeque<T> {
     }
 
     private boolean checkLoitering() {
-        if ((length >= basisCapacity) && ((double) size / length < usageFactor)) {
-            return true;
-        } else {
-            return false;
-        }
+        return ((length >= basisCapacity) && ((double) size / length < usageFactor));
     }
 }

@@ -37,7 +37,7 @@ public class LinkedListDeque<T> {
 
     public boolean isEmpty() {
 
-        return(size == 0);
+        return (size == 0);
     }
 
     public int size() {
@@ -45,11 +45,11 @@ public class LinkedListDeque<T> {
         return size;
     }
 
-    public void printDeque(){
+    public void printDeque() {
         int count = 0;
         Node pointer = sentinel.next;
         while (count < size) {
-            System.out.print( pointer.item + " ");
+            System.out.print(pointer.item + " ");
             pointer = pointer.next;
             count++;
         }
