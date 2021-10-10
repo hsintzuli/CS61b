@@ -1,8 +1,8 @@
 public class LinkedListDeque<T> {
-    private class Node{
-        public Node prev;
-        public T item;
-        public Node next;
+    private class Node {
+        private Node prev;
+        private T item;
+        private Node next;
 
         public Node(Node p, T i, Node n) {
             prev = p;
@@ -35,22 +35,25 @@ public class LinkedListDeque<T> {
         size = size + 1;
     }
 
-    public boolean isEmpty(){
-        return(size==0);
+    public boolean isEmpty() {
+
+        return(size == 0);
     }
 
-    public int size(){
+    public int size() {
+
         return size;
     }
 
     public void printDeque(){
         int count = 0;
         Node pointer = sentinel.next;
-        while(count < size){
+        while (count < size) {
             System.out.print( pointer.item + " ");
             pointer = pointer.next;
             count++;
         }
+        System.out.println();
     }
 
     public T removeFirst() {

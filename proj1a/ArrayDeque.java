@@ -10,6 +10,7 @@ public class ArrayDeque<T> {
 
     /** Creates an empty array deque. */
     public ArrayDeque(){
+
         this(8);
     }
 
@@ -23,7 +24,7 @@ public class ArrayDeque<T> {
     /** Resizes the underlying array to the targeting capacity. */
     private void resize(int targetCapacity) {
         T[] newItems = (T[]) new Object[targetCapacity];
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             newItems[i] = items[circulateIndex(nextFirst, i + 1)];
         }
         items = newItems;
@@ -32,25 +33,25 @@ public class ArrayDeque<T> {
     /** Circulate a new index which is an existing index plus or minus i. */
     private int circulateIndex(int index, int i) {
         index = index + i;
-        if(index < 0) {
+        if (index < 0) {
             index = length + index;
-        }else if(index >= length ) {
+        } else if (index >= length) {
             index = index - length;
         }
         return index;
     }
 
     public void addFirst(T item) {
-        if(size == items.length){
+        if (size == items.length) {
             expandLength( 2);
         }
         items[nextFirst] = item;
-        nextFirst = circulateIndex(nextFirst,-1);
+        nextFirst = circulateIndex(nextFirst, -1);
         size++;
     }
 
     public void addLast(T item) {
-        if(size == items.length) {
+        if (size == items.length) {
             expandLength(2);
         }
         items[nextLast] = item;
@@ -58,16 +59,16 @@ public class ArrayDeque<T> {
         size++;
     }
 
-    public boolean isEmpty(){
-        return(size==0);
+    public boolean isEmpty() {
+        return(size == 0);
     }
 
-    public int size(){
+    public int size() {
         return size;
     }
 
     public void printDeque() {
-        for(int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             System.out.print(items[circulateIndex(nextFirst, i + 1)] + " ");
         }
         System.out.println();
@@ -89,7 +90,7 @@ public class ArrayDeque<T> {
     }
 
     public T removeLast(){
-        if( !isEmpty()) {
+        if (!isEmpty()) {
             nextLast = circulateIndex(nextLast, -1);
             T lastItem = items[nextLast];
             items[nextLast] = null;
@@ -104,19 +105,18 @@ public class ArrayDeque<T> {
         }
     }
 
-    public T get(int index){
-        if(index >= size) {
+    public T get(int index) {
+        if (index >= size) {
             return null;
-        }else
-        {
+        } else {
             return items[circulateIndex(nextFirst, index + 1)];
         }
     }
 
     /** Expand the length of items by a particular expandFactor*/
     private void expandLength(int expandFactor) {
-        resize(length*expandFactor);
-        length = length*expandFactor;
+        resize(length * expandFactor);
+        length = length * expandFactor;
         nextFirst = length - 1;
         nextLast = size;
     }
@@ -129,12 +129,10 @@ public class ArrayDeque<T> {
         nextLast = size;
     }
 
-    private boolean checkLoitering(){
-        if ((length >= basisCapacity) && ((double) size/length < usageFactor)) {
+    private boolean checkLoitering() {
+        if ((length >= basisCapacity) && ((double) size / length < usageFactor)) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
