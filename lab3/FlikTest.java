@@ -11,25 +11,25 @@ public class FlikTest {
     }
 
     @Test
-    public void testNumber128(){
+    public void testNumber128() {
         int a = 128;
         int b = 128;
-        assertTrue(Flik.isSameNumber(a,b));
+        assertTrue(Flik.isSameNumber(a, b));
     }
 
     @Test
-    public void testNumber128Exception(){
+    public void testNumber128Exception() {
         int a = 128;
         int b = 128;
-        assertFalse(Flik.isSameNumber(a,b));
+        assertFalse(Flik.isSameNumber(a, b));
     }
 
-    public static void testSameNumberInLoop(){
+    public static void testSameNumberInLoop() {
         int i = 100;
         int j = 100;
-        while(Flik.isSameNumber(i,j)){
+        while (Flik.isSameNumber(i, j)) {
             System.out.print("i = " + i + " j = " + j + "\n");
-            if(i == 130){
+            if (i == 130) {
                 break;
             }
             i++;
@@ -38,7 +38,7 @@ public class FlikTest {
         System.out.println("BreakOut! i = " + i + " ,j = " + j);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         testSameNumberInLoop();
     }
 }
