@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 public class TestPalindrome {
 
     static Palindrome palindrome = new Palindrome();
-    static OffByOne offByOne = new OffByOne();
+    static CharacterComparator cc = new OffByOne();
 
     @Test
     public void testWordToDeque() {
@@ -25,9 +25,12 @@ public class TestPalindrome {
         assertTrue(palindrome.isPalindrome("a"));
         assertTrue(palindrome.isPalindrome(""));
 
-        assertTrue(offByOne.isPalindrome("flake"));
-        assertFalse(offByOne.isPalindrome("noon"));
-        assertTrue(offByOne.isPalindrome("a"));
-        assertTrue(offByOne.isPalindrome(""));
+        assertTrue(palindrome.isPalindrome("flake", cc));
+        assertTrue(palindrome.isPalindrome("this", cc));
+        assertFalse(palindrome.isPalindrome("racecar", cc));
+        assertTrue(palindrome.isPalindrome("a", cc));
+        assertTrue(palindrome.isPalindrome("", cc));
+
+
     }
 }

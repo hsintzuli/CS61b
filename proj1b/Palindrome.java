@@ -19,7 +19,6 @@ public class Palindrome {
         Deque<Character> wordDeque = wordToDeque(word);
         return isDequePalindrome(wordDeque);
     }
-
     /** return true if the wordDeque is a palindrome, and false otherwise. */
     private boolean isDequePalindrome(Deque<Character> wordDeque){
         if (wordDeque.size() <= 1) {
@@ -30,6 +29,23 @@ public class Palindrome {
             return false;
         } else {
             return isDequePalindrome(wordDeque);
+        }
+    }
+
+
+    public boolean isPalindrome(String word, CharacterComparator cc) {
+        Deque<Character> wordDeque = wordToDeque(word);
+        return isDequePalindrome(wordDeque, cc);
+    }
+    private boolean isDequePalindrome(Deque<Character> wordDeque, CharacterComparator cc){
+        if (wordDeque.size() <= 1) {
+            return true;
+        }
+
+        if  (!cc.equalChars(wordDeque.removeFirst(), wordDeque.removeLast())) {
+            return false;
+        } else {
+            return isDequePalindrome(wordDeque, cc);
         }
     }
 }
