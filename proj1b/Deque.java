@@ -1,13 +1,12 @@
 /** Double-ended queues are sequence containers with dynamic
  *  sizes that can be expanded or contracted on both ends.
  */
-
 public interface Deque<T> {
 
-    /** Adds an item of type T to the front of the deque. */
+    /** Adds an @param item of type T to the front of the deque. */
     void addFirst(T item);
 
-    /** Adds an item of type T to the back of the deque. */
+    /** Adds an @param item of type T to the back of the deque. */
     void addLast(T item);
 
     /** Returns true if deque is empty, false otherwise. */
@@ -16,7 +15,8 @@ public interface Deque<T> {
     /** Returns the number of items in the deque. */
     int size();
 
-    /** Prints the items in the deque from first to last, separated by a space. */
+    /** Prints the items in the deque from first to last,
+     * separated by a space. */
     void printDeque();
 
     /** Removes and returns the item at the front of the deque.
@@ -27,9 +27,7 @@ public interface Deque<T> {
      * If no such item exists, returns null. */
     T removeLast();
 
-    /**  Gets the item at the given index, where 0 is the front, 1 is the
+    /**  Gets the item at the given @param index, where 0 is the front, 1 is the
      * next item, and so forth. If no such item exists, returns null. */
     T get(int index);
-
-
 }

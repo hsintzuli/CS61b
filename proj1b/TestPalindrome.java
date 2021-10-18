@@ -21,13 +21,14 @@ public class TestPalindrome {
 
         assertFalse(palindrome.isPalindrome("persiflage"));
         assertTrue(palindrome.isPalindrome("noon"));
-        assertTrue(palindrome.isPalindrome("racecar"));
+        assertFalse(palindrome.isPalindrome("NOon"));
         assertTrue(palindrome.isPalindrome("a"));
         assertTrue(palindrome.isPalindrome(""));
 
         assertTrue(palindrome.isPalindrome("flake", cc));
         assertTrue(palindrome.isPalindrome("this", cc));
-        assertFalse(palindrome.isPalindrome("racecar", cc));
+        assertTrue(palindrome.isPalindrome("siht", cc));
+        assertFalse(palindrome.isPalindrome("AAA", cc));
         assertTrue(palindrome.isPalindrome("a", cc));
         assertTrue(palindrome.isPalindrome("", cc));
 
