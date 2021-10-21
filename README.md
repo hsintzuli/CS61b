@@ -6,7 +6,7 @@
   Before taking the midterms, I would orginize the contents and notes as a way to prepare the exam and upload the notes in my website.
   
 ## Progress
-**Midter1** ![progress](https://progress-bar.dev/80/ "progress")  
+**Midterm1** ![progress](https://progress-bar.dev/80/ "progress")  
   Lab: Lab1 (√), Lab2 (√), Lab3 (√)  
   Exercise: HW0 (√)  
   Project: project0 (√), project1A (√),  project1B (√),  project1Gold (√)  
