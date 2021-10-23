@@ -21,16 +21,6 @@ public class ArrayDeque<T> {
         this.length = length;
     }
 
-    /** Creates a deep copy of other. */
-    public ArrayDeque(ArrayDeque<T> other) {
-        items = (T[]) new Object[other.length];
-        size = 0;
-        length = other.length;
-        for (int i = 0; i < other.size(); i += 1) {
-            addLast(other.get(i));
-        }
-    }
-
     /** Resizes the underlying array to the targeting capacity. */
     private void resize(int targetCapacity) {
         T[] newItems = (T[]) new Object[targetCapacity];
