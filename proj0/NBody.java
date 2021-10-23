@@ -31,6 +31,7 @@ public class NBody{
         double dt = Double.parseDouble(args[1]);
         String filename = args[2];
         String imageToDraw = "images/starfield.jpg";
+        String audioFilename = "audio/2001.mid";
         
         double radius = readRadius(filename);
         Planet[] planets = readPlanets(filename);
@@ -39,6 +40,7 @@ public class NBody{
         double time=0;
         StdDraw.enableDoubleBuffering();
         
+        StdAudio.play(audioFilename);
         while(time < T){
             double[] xForces = new double[nums];
             double[] yForces = new double[nums];
