@@ -21,6 +21,16 @@ public class ArrayDeque<T> {
         this.length = length;
     }
 
+    /** Creates a deep copy of other. */
+    public ArrayDeque(ArrayDeque<T> other) {
+        items = (T[]) new Object[other.length];
+        size = 0;
+        length = other.length;
+        for (int i = 0; i < other.size(); i += 1) {
+            addLast(other.get(i));
+        }
+    }
+
     /** Resizes the underlying array to the targeting capacity. */
     private void resize(int targetCapacity) {
         T[] newItems = (T[]) new Object[targetCapacity];
@@ -28,6 +38,8 @@ public class ArrayDeque<T> {
             newItems[i] = items[circulateIndex(nextFirst, i + 1)];
         }
         items = newItems;
+        length = targetCapacity;
+
     }
 
     /** Circulate a new index which is an existing index plus or minus i. */
@@ -41,32 +53,39 @@ public class ArrayDeque<T> {
         return index;
     }
 
+    /** Adds an item of type T to the front of the deque. */
     public void addFirst(T item) {
         if (size == items.length) {
-            expandLength(2);
+            expandLength(resizeRatio);
         }
         items[nextFirst] = item;
         nextFirst = circulateIndex(nextFirst, -1);
         size++;
     }
 
+    /** Adds an item of type T to the back of the deque. */
     public void addLast(T item) {
         if (size == items.length) {
-            expandLength(2);
+            expandLength(resizeRatio);
         }
         items[nextLast] = item;
         nextLast = circulateIndex(nextLast, 1);
         size++;
     }
 
+    /** Returns true if deque is empty, false otherwise. */
     public boolean isEmpty() {
         return (size == 0);
     }
 
+    /** Returns the number of items in the deque. */
     public int size() {
         return size;
     }
 
+    /** Prints the items in the deque from first to last, separated by a space.
+     *  Once all the items have been printed, print out a new line.
+     */
     public void printDeque() {
         for (int i = 0; i < size; i++) {
             System.out.print(items[circulateIndex(nextFirst, i + 1)] + " ");
@@ -74,6 +93,7 @@ public class ArrayDeque<T> {
         System.out.println();
     }
 
+    /** Removes and returns the item at the front of the deque. If no such item exists, returns null. */
     public T removeFirst() {
         if (!isEmpty()) {
             nextFirst = circulateIndex(nextFirst, 1);
@@ -89,6 +109,7 @@ public class ArrayDeque<T> {
         }
     }
 
+    /** Removes and returns the item at the back of the deque. If no such item exists, returns null. */
     public T removeLast() {
         if (!isEmpty()) {
             nextLast = circulateIndex(nextLast, -1);
@@ -105,6 +126,9 @@ public class ArrayDeque<T> {
         }
     }
 
+    /** Gets the item at the given index, where 0 is the front, 1 is the next item, and so forth.
+     *  If no such item exists, returns null. Must not alter the deque!
+     */
     public T get(int index) {
         if (index >= size) {
             return null;
@@ -116,7 +140,6 @@ public class ArrayDeque<T> {
     /** Expand the length of items by a particular expandFactor*/
     private void expandLength(int expandFactor) {
         resize(length * expandFactor);
-        length = length * expandFactor;
         nextFirst = length - 1;
         nextLast = size;
     }
@@ -124,7 +147,6 @@ public class ArrayDeque<T> {
     /** Shrink the length of items to half*/
     private void shrinkLength() {
         resize(length / 2);
-        length = length / 2;
         nextFirst = length - 1;
         nextLast = size;
     }
