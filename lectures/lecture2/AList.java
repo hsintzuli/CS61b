@@ -11,6 +11,7 @@ public class AList<Glorp> {
     private Glorp[] items;
     private int size;
 
+
     /** Creates an empty list. */
     public AList() {
         items = (Glorp[]) new Object[100];
