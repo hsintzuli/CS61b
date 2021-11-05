@@ -6,7 +6,7 @@
   
   
 ## Progress
-**Midterm1** ![progress](https://progress-bar.dev/80/ "progress")  
+**Midterm1** ![progress](https://progress-bar.dev/100/ "progress")  
   Lab: Lab1 (√), Lab2 (√), Lab3 (√)  
   Exercise: HW0 (√)  
   Project: project0 (√), project1A (√),  project1B (√),  project1Gold (√)  
