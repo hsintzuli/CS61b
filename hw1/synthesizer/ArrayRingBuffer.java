@@ -62,6 +62,9 @@ import java.util.Iterator;
      */
     public T peek() {
         // TODO: Return the first item. None of your instance variables should change.
+        if (isEmpty()) {
+            throw new RuntimeException("Ring buffer underflow");
+        }
         return rb[first % capacity];
     }
 
