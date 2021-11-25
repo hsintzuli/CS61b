@@ -32,7 +32,9 @@ public class Game {
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
 
-        TETile[][] finalWorldFrame = null;
-        return finalWorldFrame;
+        long seed = Long.parseLong(input.replaceAll("[^0-9]", ""));
+        MapParameters mp = MapParameters.DefaultParameters();
+        MapGenerator mg = new MapGenerator(seed, mp);
+        return mg.generateRandomWorld();
     }
 }
