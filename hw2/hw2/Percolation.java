@@ -8,6 +8,8 @@ public class Percolation {
     private int N;
     private int numberOfOpenSite;
     private WeightedQuickUnionUF unionUF;
+    // The other unionUF used to avoid backwash;
+    private WeightedQuickUnionUF unionUFwithoutBackWash;
     private int top;
     private int bottom;
 
@@ -31,6 +33,7 @@ public class Percolation {
         grid = new boolean[N][N];
         numberOfOpenSite = 0;
         unionUF = new WeightedQuickUnionUF(N * N + 2);
+        unionUFwithoutBackWash = new WeightedQuickUnionUF(N * N + 2);
         top = N * N;
         bottom = N * N + 1;
     }
@@ -47,7 +50,9 @@ public class Percolation {
         numberOfOpenSite++;
         if (row == 0) {
             unionUF.union(top, xyTo1D(row, col));
-        } else if (row == N - 1) {
+            unionUFwithoutBackWash.union(top, xyTo1D(row, col));
+        }
+        if (row == N - 1) {
             unionUF.union(bottom, xyTo1D(row, col));
         }
 
@@ -61,6 +66,7 @@ public class Percolation {
                 continue;
             }
             unionUF.union(xyTo1D(row, col), xyTo1D(r, c));
+            unionUFwithoutBackWash.union(xyTo1D(row, col), xyTo1D(r, c));
         }
 
     }
@@ -79,20 +85,12 @@ public class Percolation {
         if (checkIfExceedBound(row, col)) {
             throw new IndexOutOfBoundsException("Exceed the prescribed range");
         }
-        if (unionUF.connected(top, xyTo1D(row, col))) {
-            return true;
-        }
-
-        return false;
+        return unionUFwithoutBackWash.connected(top, xyTo1D(row, col));
     }
 
     // does the system percolate?
     public boolean percolates() {
-        if (unionUF.connected(top, bottom)) {
-                return true;
-        }
-
-        return false;
+        return unionUF.connected(top, bottom);
     }
 
     public int numberOfOpenSites() {
