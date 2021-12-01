@@ -22,7 +22,7 @@ public class PercolationStats {
                 int c = StdRandom.uniform(N);
                 perc.open(r, c);
             }
-            double threshold = (double) perc.numberOfOpenSites()/(N*N);
+            double threshold = (double) perc.numberOfOpenSites() / (N * N);
             thresholdArray[i] = threshold;
         }
 
@@ -44,12 +44,12 @@ public class PercolationStats {
 
     // low endpoint of 95% confidence interval
     public double confidenceLow() {
-        return mean() - 1.96 * stddev();
+        return mean() - 1.96 * stddev() / Math.sqrt(T);
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHigh() {
-        return mean() + 1.96 * stddev();
+        return mean() + 1.96 * stddev() / Math.sqrt(T);
     }
 
 }

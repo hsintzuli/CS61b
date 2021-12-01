@@ -8,27 +8,31 @@ public class Percolation {
     private int N;
     private int numberOfOpenSite;
     private WeightedQuickUnionUF unionUF;
+    private int top;
+    private int bottom;
 
     private int xyTo1D(int r, int c) {
-        return r * N+ c;
+        return r * N + c;
     }
 
     private boolean checkIfExceedBound(int r, int c) {
-        if (r < 0 || r>= N || c < 0 || c >= N) {
+        if (r < 0 || r >= N || c < 0 || c >= N) {
             return true;
         }
         return false;
     }
 
     // create N-by-N grid, with all sites initially blocked
-    public Percolation(int N){
+    public Percolation(int N) {
         if (N <= 0) {
             throw new IllegalArgumentException("N must be larger than or equal to 0");
         }
         this.N = N;
         grid = new boolean[N][N];
         numberOfOpenSite = 0;
-        unionUF = new WeightedQuickUnionUF(N * N);
+        unionUF = new WeightedQuickUnionUF(N * N + 2);
+        top = N * N;
+        bottom = N * N + 1;
     }
 
     // open the site (row, col) if it is not open already
@@ -41,6 +45,11 @@ public class Percolation {
         }
         grid[row][col] = true;
         numberOfOpenSite++;
+        if (row == 0) {
+            unionUF.union(top, xyTo1D(row, col));
+        } else if (row == N - 1) {
+            unionUF.union(bottom, xyTo1D(row, col));
+        }
 
         // connect neighbor grids
         int[][] next = new int[][] { {0, 1}, {0, -1}, {1, 0}, {-1, 0} };
@@ -48,7 +57,7 @@ public class Percolation {
             int r = row + next[i][0];
             int c = col + next[i][1];
 
-            if (checkIfExceedBound(r, c) || !isOpen(r,c)) {
+            if (checkIfExceedBound(r, c) || !isOpen(r, c)) {
                 continue;
             }
             unionUF.union(xyTo1D(row, col), xyTo1D(r, c));
@@ -70,28 +79,19 @@ public class Percolation {
         if (checkIfExceedBound(row, col)) {
             throw new IndexOutOfBoundsException("Exceed the prescribed range");
         }
-        if (!isOpen(row, col)) {
-            return false;
-        }
-        if (row == 0) {
+        if (unionUF.connected(top, xyTo1D(row, col))) {
             return true;
         }
-        int thisIndex = xyTo1D(row, col);
-        for (int i = 0; i < N; i++) {
-            if (unionUF.connected(i, thisIndex)) {
-                return true;
-            }
-        }
+
         return false;
     }
 
     // does the system percolate?
     public boolean percolates() {
-        for (int i = 0; i < N; i++) {
-            if (isFull(N - 1, i)) {
+        if (unionUF.connected(top, bottom)) {
                 return true;
-            }
         }
+
         return false;
     }
 
