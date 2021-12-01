@@ -10,7 +10,6 @@ import java.util.List;
 public class World {
     public TETile[][] world;
     private ArrayList<Room> roomList;
-    private ArrayList<Room> hallWayList;
 
 
     public World(int width, int height) {
@@ -21,7 +20,6 @@ public class World {
             }
         }
         roomList = new ArrayList<>();
-        hallWayList = new ArrayList<>();
     }
 
     public boolean checkOverlap(Room r) {
@@ -29,7 +27,7 @@ public class World {
         int pointY = r.position.getY();
         for (int i = -1; i <= r.width + 1; i++) {
             for (int j = -1; j <= r.height + 1; j++) {
-                if(world[pointX+i][pointY+j] != Tileset.NOTHING) {
+                if(world[pointX +i ][pointY+j] != Tileset.NOTHING) {
                     return false;
                 }
             }

@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 public class Room implements Comparable<Room>{
-    Position position;
-    int width;
-    int height;
+    public Position position;
+    public int width;
+    public int height;
 
     public Room (Position pos, int w, int h) {
         position = pos;
