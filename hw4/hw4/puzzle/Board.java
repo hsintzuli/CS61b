@@ -11,9 +11,12 @@ public class Board implements WorldState {
     public Board(int[][] tiles) {
         size = tiles.length;
         myBoard = new int[size][size];
-        for(int i = 0; i < tiles.length; i++)
-            for(int j = 0; j < tiles[i].length; j++)
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
                 myBoard[i][j] = tiles[i][j];
+            }
+        }
+
     }
 
     /** Returns value of tile at row i, column j (or 0 if blank)
@@ -85,8 +88,11 @@ public class Board implements WorldState {
 
     private int[] truePosition(int number) {
         int[] truePosition = new int[2];
-        truePosition[0] = number / size;
-        truePosition[1] = number % size - 1;
+        int i, j;
+        i = (number - 1) / size;
+        j = number % size ;
+        truePosition[0] = i;
+        truePosition[1] = (j == 0 ? size - 1 : j - 1);
 
         return truePosition;
     }
@@ -118,7 +124,7 @@ public class Board implements WorldState {
     }
 
     public boolean equals(Object y) {
-        if (y.getClass() != this.getClass() || ((Board) y).size != size) {
+        if (y == null || y.getClass() != this.getClass() || ((Board) y).size != size ) {
             return false;
         }
         for (int i = 0; i < size; i++) {

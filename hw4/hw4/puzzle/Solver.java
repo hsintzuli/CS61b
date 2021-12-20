@@ -6,17 +6,17 @@ import java.util.LinkedList;
 import java.util.Stack;
 
 public class Solver {
-    MinPQ<searchNode> moveSeq;
-    HashSet<WorldState> closedSet = new HashSet<>();
-    searchNode solutionNode;
+    private MinPQ<Search_Node> moveSeq;
+    private HashSet<WorldState> closedSet = new HashSet<>();
+    private Search_Node solutionNode;
 
-    private static class searchNode {
+    private static class Search_Node {
         private WorldState state;
         private int startToThis;
         private int thisToEnd;
-        private searchNode previousSearchNode;
+        private Search_Node previousSearchNode;
 
-        public searchNode(WorldState state, int costPath, searchNode prev) {
+        public Search_Node(WorldState state, int costPath, Search_Node prev) {
             this.state = state;
             startToThis = costPath;
             thisToEnd = state.estimatedDistanceToGoal();
@@ -29,9 +29,9 @@ public class Solver {
 
     }
 
-    private static class pqComparator implements Comparator<searchNode>{
+    private static class Node_Comparator implements Comparator<Search_Node> {
         @Override
-        public int compare(searchNode a, searchNode b){
+        public int compare(Search_Node a, Search_Node b) {
             int value = a.path() - b.path();
             if (value > 0) {
                 return 1;
@@ -49,11 +49,11 @@ public class Solver {
      puzzle using the A* algorithm. Assumes a solution exists. */
     public Solver(WorldState initial) {
         int count = 0;
-        moveSeq = new MinPQ<>(new pqComparator());
-        moveSeq.insert(new searchNode(initial, 0, null));
+        moveSeq = new MinPQ<>(new Node_Comparator());
+        moveSeq.insert(new Search_Node(initial, 0, null));
 
         while (!moveSeq.isEmpty()) {
-            searchNode s = moveSeq.min();
+            Search_Node s = moveSeq.min();
             if (s.state.isGoal()) {
                 solutionNode = s;
                 return;
@@ -64,7 +64,7 @@ public class Solver {
                 if (s.previousSearchNode != null && state.equals(s.previousSearchNode.state)) {
                     continue;
                 }
-                moveSeq.insert(new searchNode(state, s.startToThis + 1, s));
+                moveSeq.insert(new Search_Node(state, s.startToThis + 1, s));
             }
         }
     }
@@ -79,7 +79,7 @@ public class Solver {
      to the solution. */
     public Iterable<WorldState> solution() {
         Stack<WorldState> solutionSet = new Stack<>();
-        searchNode prevNode = solutionNode;
+        Search_Node prevNode = solutionNode;
         while (prevNode != null) {
             solutionSet.add(prevNode.state);
             prevNode = prevNode.previousSearchNode;
