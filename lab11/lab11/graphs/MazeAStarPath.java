@@ -8,7 +8,6 @@ import java.util.Queue;
 public class MazeAStarPath extends MazeExplorer {
     private int s;
     private int t;
-    private boolean targetFound = false;
     private Maze maze;
 
     public MazeAStarPath(Maze m, int sourceX, int sourceY, int targetX, int targetY) {
@@ -35,31 +34,34 @@ public class MazeAStarPath extends MazeExplorer {
     private void astar(int s) {
         // TODO
         Queue<Vertex> fringe = new PriorityQueue<>(new PQ_comparator());
-        fringe.offer(new Vertex(s, 0));
-        int lastV = s;
+        fringe.add(new Vertex(s, 0 + h(s)));
         marked[s] = true;
+        distTo[s] = 0;
         announce();
 
         while (!fringe.isEmpty()) {
             Vertex firstVertex = fringe.remove();
             int firstV = firstVertex.value;
-            edgeTo[firstV] = lastV;
             marked[firstV] = true;
-            distTo[firstV] = distTo[lastV] + 1;
             announce();
 
             if (firstV == t) {
-                targetFound = true;
                 return;
             }
+
             for (int w: maze.adj(firstV)) {
+                int dist = distTo[firstV] + 1;
+                if (dist < distTo[w]) {
+                    distTo[w] = dist;
+                    edgeTo[w] = firstV;
+                }
                 if (!marked[w]) {
-                    Vertex newVertex = new Vertex(w, h(w));
-                    fringe.offer(newVertex);
+                    Vertex newVertex = new Vertex(w, dist + h(w));
+                    fringe.add(newVertex);
                 }
             }
-            lastV = firstV;
         }
+
     }
 
     private static class Vertex {
