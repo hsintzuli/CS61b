@@ -64,6 +64,9 @@ public class Router {
             }
         }
         long thisNode = endNode.id;
+        if (!edgeTo.containsKey(thisNode)) {
+            return new LinkedList<Long>();
+        }
         while (thisNode != startNode.id) {
             tempPath.push(thisNode);
             thisNode = edgeTo.get(thisNode);
