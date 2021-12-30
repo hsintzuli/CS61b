@@ -1,7 +1,7 @@
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 /**
  * This class provides a shortestPath method for finding routes between two points
@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
  * down to the priority you use to order your vertices.
  */
 public class Router {
+
     /**
      * Return a List of longs representing the shortest path from the node
      * closest to a start location and the node closest to the destination
@@ -25,7 +26,73 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        PriorityQueue<Vertices> fringe = new PriorityQueue<>(new Vertices_Comparator());
+        Map<Long, GraphDB.Node> nodes = g.getNodes();
+        List<Long> bestPath = new LinkedList<>();
+        Stack<Long> tempPath = new Stack<>();
+
+        HashMap<Long, Long> edgeTo = new HashMap<>();
+        HashMap<Long, Double> distTo = new HashMap<>();
+
+        GraphDB.Node startNode = nodes.get(g.closest(stlon, stlat));
+        GraphDB.Node endNode = nodes.get(g.closest(destlon, destlat));
+
+        fringe.add(new Vertices(startNode.id, 0));
+        edgeTo.put(startNode.id, startNode.id);
+        distTo.put(startNode.id, 0.0);
+
+        while (!fringe.isEmpty()) {
+            long v = fringe.poll().nodeID;
+            if (v == endNode.id) {
+                break;
+            }
+
+            for (long n : g.adjacent(v)) {
+                double dist = distTo.get(v) + g.distance(v, n);
+                if (distTo.containsKey(n) && distTo.get(n) < dist) {
+                    continue;
+                }
+                edgeTo.put(n, v);
+                distTo.put(n, dist);
+                double f = dist + g.distance(endNode.id, n);
+                fringe.add(new Vertices(n, f));
+            }
+        }
+        long thisNode = endNode.id;
+        while (thisNode != startNode.id) {
+            tempPath.push(thisNode);
+            thisNode = edgeTo.get(thisNode);
+        }
+        tempPath.push(thisNode);
+        while (!tempPath.isEmpty()) {
+            bestPath.add(tempPath.pop());
+        }
+
+        return bestPath;
+    }
+
+    static class Vertices {
+        long nodeID;
+        double priority;
+
+        Vertices (long id, double pri) {
+            nodeID = id;
+            priority = pri;
+        }
+    }
+
+    private static class Vertices_Comparator implements Comparator<Vertices> {
+        @Override
+        public int compare(Vertices a, Vertices b) {
+            double value = a.priority - b.priority;
+            if (value > 0) {
+                return 1;
+            } else if (value < 0) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
     }
 
     /**
@@ -37,9 +104,76 @@ public class Router {
      * route.
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
-        return null; // FIXME
-    }
+        List<NavigationDirection> directions = new LinkedList<>();
+        Stack<String> routeStack = new Stack<>();
+        Map<Long, GraphDB.Node> nodes = g.getNodes();
 
+        NavigationDirection direction = new NavigationDirection();
+        Double degree = 0.0;
+        Double newDegree;
+        Double dist = 0.0;
+
+        for (int i = 0; i < route.size() - 1; i++) {
+            String thisWay = "unknown road";
+            GraphDB.Node prevNode = nodes.get(route.get(i));
+            GraphDB.Node lastNode = nodes.get(route.get(i + 1));
+            Set<String> way = new HashSet<>();
+            way.addAll(prevNode.ways);
+            way.retainAll(lastNode.ways);
+            newDegree = g.bearing(prevNode.id, lastNode.id);
+            Iterator<String> iter = way.iterator();
+            if (iter.hasNext()) {
+                thisWay = iter.next();
+                if (thisWay == null) {
+                    thisWay =  "unknown road";
+                }
+            }
+
+            Double d = g.distance(prevNode.id, lastNode.id);
+
+
+            if (routeStack.isEmpty()){
+                routeStack.push(thisWay);
+                direction.way = thisWay;
+                directions.add(direction);
+                direction.direction = NavigationDirection.START;
+            } else if (!thisWay.equals(routeStack.peek())) {
+                direction.distance = dist;
+
+                direction = new NavigationDirection();
+                dist = 0.0;
+                direction.way = thisWay;
+
+                if (degree < 15 && degree > -15) {
+                    direction.direction = 1;
+                } else if (degree < 30 && degree > -30) {
+                    if (degree > 0) {
+                        direction.direction = 3;
+                    } else {
+                        direction.direction = 2;
+                    }
+                } else if (degree < 100 && degree > -100) {
+                    if (degree > 0) {
+                        direction.direction = 4;
+                    } else {
+                        direction.direction = 5;
+                    }
+                } else {
+                    if (degree > 0) {
+                        direction.direction = 7;
+                    } else {
+                        direction.direction = 6;
+                    }
+                }
+                directions.add(direction);
+                routeStack.push(thisWay);
+            }
+            degree = newDegree;
+            dist += d;
+        }
+        direction.distance = dist;
+        return directions;
+    }
 
     /**
      * Class to represent a navigation direction, which consists of 3 attributes:

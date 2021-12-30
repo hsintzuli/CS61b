@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -20,7 +20,10 @@ import java.util.ArrayList;
 public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
-
+    private final Map<Long, GraphDB.Node> nodes = new HashMap<>();
+    public Map<Long, GraphDB.Node> getNodes() {
+        return nodes;
+    }
     /**
      * Example constructor shows how to create and start an XML parser.
      * You do not need to modify this constructor, but you're welcome to do so.
@@ -58,6 +61,13 @@ public class GraphDB {
      */
     private void clean() {
         // TODO: Your code here.
+        Set<Long> vertices = new HashSet<> (nodes.keySet());
+        for (long n : vertices) {
+            List<Node> neighbors = nodes.get(n).neighbors;
+            if (neighbors.isEmpty()) {
+                nodes.remove(n);
+            }
+        }
     }
 
     /**
@@ -65,8 +75,7 @@ public class GraphDB {
      * @return An iterable of id's of all vertices in the graph.
      */
     Iterable<Long> vertices() {
-        //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
+        return nodes.keySet();
     }
 
     /**
@@ -75,7 +84,11 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        return null;
+        Set<Long> adj = new HashSet<>();
+        for (Node n : nodes.get(v).neighbors) {
+            adj.add(n.id);
+        }
+        return adj;
     }
 
     /**
@@ -136,7 +149,17 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        return 0;
+        long smallest = 0;
+        double smallest_dist = Double.POSITIVE_INFINITY;
+        for (long l : nodes.keySet()) {
+            Node n = nodes.get(l);
+            double dist = distance(n.lon, n.lat, lon, lat);
+            if (dist <= smallest_dist) {
+                smallest_dist = dist;
+                smallest = l;
+            }
+        }
+        return smallest;
     }
 
     /**
@@ -145,7 +168,7 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        return 0;
+        return nodes.get(v).lon;
     }
 
     /**
@@ -154,6 +177,61 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        return 0;
+        return nodes.get(v).lat;
+    }
+
+    /**
+     * Add a course to the database.
+     *
+     * @param n node
+     */
+    void addNode(Node n) {
+        this.nodes.put(n.id, n);
+    }
+
+    void addEdge(long n1, long n2) {
+        Node a = nodes.get(n1);
+        Node b = nodes.get(n2);
+        a.neighbors.add(b);
+        b.neighbors.add(a);
+    }
+    void addWay(long n, String way) {
+        Node node = nodes.get(n);
+        node.ways.add(way);
+    }
+
+    static class Node {
+        long id;
+        double lat;
+        double lon;
+        Set<String> ways;
+        String name;
+        List <Node> neighbors = new ArrayList<>();
+
+        Node (long id, double lat, double lon) {
+            this.id = id;
+            this.lat = lat;
+            this.lon = lon;
+            ways = new HashSet<> ();
+        }
+        void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    static class Way {
+        String name;
+        Queue<Long> nodesInTheWay;
+        boolean validWay;
+        Way () {
+            nodesInTheWay = new LinkedList<>();
+            validWay = false;
+        }
+        void extendNode(Long node) {
+            nodesInTheWay.add(node);
+        }
+        void setValidWay(boolean b) {
+            validWay = b;
+        }
     }
 }
