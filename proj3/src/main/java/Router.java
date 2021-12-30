@@ -33,6 +33,7 @@ public class Router {
 
         HashMap<Long, Long> edgeTo = new HashMap<>();
         HashMap<Long, Double> distTo = new HashMap<>();
+        HashSet<Long> marked = new HashSet<>();
 
         GraphDB.Node startNode = nodes.get(g.closest(stlon, stlat));
         GraphDB.Node endNode = nodes.get(g.closest(destlon, destlat));
@@ -43,12 +44,16 @@ public class Router {
 
         while (!fringe.isEmpty()) {
             long v = fringe.poll().nodeID;
+            marked.add(v);
             if (v == endNode.id) {
                 break;
             }
 
             for (long n : g.adjacent(v)) {
                 double dist = distTo.get(v) + g.distance(v, n);
+                if (marked.contains(n)) {
+                    continue;
+                }
                 if (distTo.containsKey(n) && distTo.get(n) < dist) {
                     continue;
                 }
